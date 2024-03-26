@@ -57,18 +57,21 @@ class HandleTxs():
 
             
     def handler(self, possible_txs: List[Transaction]) -> List[Transaction]:
+        tx_to_valid = list(possible_txs)
         validated_txs = list()
         while True:
             new_possible_txs = []
-            for tx in possible_txs:
+            for tx in tx_to_valid:
                 handled_tx = self.handle_tx(tx)
                 if handled_tx is not None:
                     validated_txs.append(handled_tx)
                 else:
                     new_possible_txs.append(tx)
-            if new_possible_txs == possible_txs:
+            for tx in validated_txs:
+                tx_to_valid.remove(tx)
+            if len(new_possible_txs) == len(tx_to_valid):
                 break
-            possible_txs = new_possible_txs
+            tx_to_valid = new_possible_txs
         return validated_txs
         
             
